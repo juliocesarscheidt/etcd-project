@@ -1,0 +1,40 @@
+version: '3'
+services:
+  app:
+    container_name: app
+    build:
+      context: ./etcd-app/
+      dockerfile: Dockerfile
+    ports:
+      - 9000:9000
+    restart: always
+    depends_on:
+      - etcd
+    environment:
+      ETCD_HOST: ${ETCD_HOST:-http://etcd:2379}
+      API_PORT: ${API_PORT:-9000}
+    networks:
+      - app-tier
+    volumes:
+      - ./etcd-app/:/app/
+      - /app/node_modules/
+    command: "sh -c 'npm install && npm run dev'"
+
+  etcd:
+    container_name: etcd
+    image: bitnami/etcd:3-debian-10
+    ports:
+      - 2379:2379
+      - 2380:2380
+    restart: always
+    environment:
+      ETCD_CONFIG_FILE: ${ETCD_CONFIG_FILE:-/usr/bin/etcd.conf.yaml}
+      ALLOW_NONE_AUTHENTICATION: ${ALLOW_NONE_AUTHENTICATION:-yes}
+    networks:
+      - app-tier
+    volumes:
+      - ./etcd.conf.yaml:/usr/bin/etcd.conf.yaml
+
+networks:
+  app-tier:
+    driver: bridge

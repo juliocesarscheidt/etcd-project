@@ -1,0 +1,21 @@
+{
+  "name": "etcd-app",
+  "version": "1.0.0",
+  "description": "etcd-project",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "pm2 start index.js -i 1 --watch && pm2 logs",
+    "test": "echo TEST NEEDS TO BE IMPLEMENTED && exit 0"
+  },
+  "keywords": [],
+  "author": "julio-cesar",
+  "license": "ISC",
+  "dependencies": {
+    "etcd3": "0.2.13",
+    "express": "4.17.1"
+  },
+  "devDependencies": {
+    "pm2": "4.2.1"
+  }
+}

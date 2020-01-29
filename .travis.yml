@@ -1,0 +1,14 @@
+sudo: required
+services:
+  - docker
+
+dist: trusty
+
+env:
+  - SHA=$(git rev-parse --short HEAD)
+
+before_install:
+  - docker image build --tag etcd-app:$SHA -f ./etcd-app/Dockerfile ./etcd-app
+
+script:
+  - docker container run --rm -v ${PWD}/etcd-app/:/app --entrypoint "" etcd-app:$SHA npm run test
