@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: etcd
+    etcd_node: etcd0
+  name: etcd0
+
+spec:
+  containers:
+    - name: etcd0
+      image: quay.io/coreos/etcd:latest
+
+      command:
+      - /usr/local/bin/etcd
+      - --name
+      - etcd0
+      - --initial-advertise-peer-urls
+      - http://etcd0:2380
+      - --listen-peer-urls
+      - http://0.0.0.0:2380
+      - --listen-client-urls
+      - http://0.0.0.0:2379
+      - --advertise-client-urls
+      - http://etcd0:2379
+      - --initial-cluster
+      - etcd0=http://etcd0:2380,etcd1=http://etcd1:2380,etcd2=http://etcd2:2380
+      - --initial-cluster-state
+      - new
+
+      ports:
+        - containerPort: 2379
+          name: client-port
+          protocol: TCP
+
+        - containerPort: 2380
+          name: server-port
+          protocol: TCP
+
+      resources:
+        requests:
+          memory: "128Mi"
+          cpu: "150m"
+
+        limits:
+          memory: "256Mi"
+          cpu: "300m"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    etcd_node: etcd0
+  name: etcd0
+
+spec:
+  ports:
+  - name: client
+    port: 2379
+    protocol: TCP
+    targetPort: client-port
+
+  - name: server
+    port: 2380
+    protocol: TCP
+    targetPort: server-port
+
+  selector:
+    etcd_node: etcd0
