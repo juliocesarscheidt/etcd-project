@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: etcd-deployment
+  namespace: default
+  labels:
+    app: etcd-app
+
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
+
+  selector:
+    matchLabels:
+      app: etcd-app
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 3
+
+  template:
+    metadata:
+      name: etcd-app
+      labels:
+        app: etcd-app
+
+    spec:
+      containers:
+        - name: app
+          image: juliocesarmidia/etcd-app:v1.0.0
+
+          ports:
+            - containerPort: 9000
+              name: etcd-app-port
+
+          env:
+            - name: ETCD_HOST
+              value: "http://etcd-svc:2379"
+
+            - name: API_PORT
+              value: "9000"
+
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "150m"
+
+            limits:
+              memory: "256Mi"
+              cpu: "300m"
+
+      restartPolicy: Always

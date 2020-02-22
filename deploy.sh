@@ -2,15 +2,19 @@
 
 set -e
 
+# etcd cluster
 NUM_PODS=3
 
 for (( i=0 ; i < $NUM_PODS ; i++ )); do
-  echo "./k8s/etcd$i-pod.yaml"
+  echo "./k8s/etcd${i}-pod.yaml"
   kubectl apply -f "./k8s/etcd${i}-pod.yaml"
 done
 
 kubectl apply -f ./k8s/etcd-svc.yaml
 
+# etcd app
+kubectl apply -f ./k8s/etcd-app-deployment.yaml
+kubectl apply -f ./k8s/etcd-app-cluster-ip-svc.yaml
 
 # kubectl exec -it etcd0 -- /bin/sh -c "export ETCDCTL_API=3 && etcdctl put foo bar && etcdctl get foo"
 
