@@ -39,6 +39,12 @@ spec:
             - name: ETCD_HOST
               value: "http://etcd-svc:2379"
 
+            - name: ETCD_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: env-secrets
+                  key: ETCD_SECRET
+
             - name: API_PORT
               value: "9000"
 

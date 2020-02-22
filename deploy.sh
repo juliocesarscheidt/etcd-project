@@ -2,6 +2,9 @@
 
 set -e
 
+# secrets
+kubectl apply -f ./k8s/secrets.yaml
+
 # etcd cluster
 NUM_PODS=3
 
