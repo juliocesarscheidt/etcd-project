@@ -5,6 +5,7 @@ metadata:
     app: etcd
     etcd_node: etcd1
   name: etcd1
+  namespace: default
 
 spec:
   containers:
@@ -56,6 +57,11 @@ metadata:
   name: etcd1
 
 spec:
+  type: ClusterIP
+
+  selector:
+    etcd_node: etcd1
+
   ports:
   - name: client
     port: 2379
@@ -66,6 +72,3 @@ spec:
     port: 2380
     protocol: TCP
     targetPort: server-port
-
-  selector:
-    etcd_node: etcd1

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: rabbit-service
+  name: etcd-app-svc
   namespace: default
   labels:
     app: etcd-app

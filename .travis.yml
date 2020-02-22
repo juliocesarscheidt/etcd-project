@@ -12,7 +12,6 @@ before_install:
 
 script:
   - docker container run --rm --entrypoint "" juliocesarmidia/etcd-app:$SHA npm run lint
-  # docker container run --rm -it --entrypoint "" juliocesarmidia/etcd-app:$SHA sh
 
 after_success:
   - docker image build --tag juliocesarmidia/etcd-app:$SHA --tag juliocesarmidia/etcd-app:v1.0.0 -f ./etcd-app/Dockerfile ./etcd-app
