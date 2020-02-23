@@ -14,4 +14,5 @@ module.exports = {
   env: {
     "jest": true,
   },
+  ignorePatterns: ["node_modules/", "*.spec.js"],
 };

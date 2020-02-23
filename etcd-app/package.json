@@ -6,8 +6,9 @@
   "scripts": {
     "start": "node index.js",
     "dev": "pm2 start index.js -i 1 --watch && pm2 logs",
-    "test": "echo TEST NEEDS TO BE IMPLEMENTED && exit 0",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "jest",
+    "test:watch": "jest -- --watchAll"
   },
   "keywords": [],
   "author": "julio-cesar",
@@ -21,6 +22,8 @@
     "express": "4.17.1"
   },
   "devDependencies": {
+    "babel-jest": "25.1.0",
+    "jest": "25.1.0",
     "pm2": "4.2.1"
   }
 }
