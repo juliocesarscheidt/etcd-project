@@ -11,9 +11,8 @@ module.exports = (app) => {
     }
 
     const user = await etcdGet({ key: name });
-    // cache request
     if (user) {
-      console.log('returning from CACHE :: user', user); // eslint-disable-line
+      console.info('returning from CACHE :: user', user);
       return res.status(202).json({ status: 'OK', data: { id: user.id, name: user.name } });
     }
 

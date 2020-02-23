@@ -18,11 +18,12 @@ done
 kubectl apply -f ./k8s/etcd-svc.yaml
 
 # ingress controller
-kubectl apply -f ./k8s/nginx-ingress-controller.yaml
+[ $(kubectl get deploy -n kube-system | grep nginx-ingress | wc -l) -eq 0 ] && kubectl apply -f ./k8s/nginx-ingress-controller.yaml
 
 # etcd app
 kubectl apply -f ./k8s/etcd-app-deployment.yaml
 kubectl apply -f ./k8s/etcd-app-cluster-ip-svc.yaml
+kubectl apply -f ./k8s/etcd-app-hpa.yaml
 kubectl apply -f ./k8s/ingress-service.yaml
 
 # kubectl exec -it etcd0 -- /bin/sh -c "export ETCDCTL_API=3 && etcdctl put foo bar && etcdctl get foo"

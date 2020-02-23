@@ -8,7 +8,7 @@ const jsonParser = (json) => JSON.parse(json);
 const jsonStringify = (json) => JSON.stringify(json);
 const parseObjectValues = (obj) => Object.keys(obj).map((key) => jsonParser(obj[key]));
 
-const secret = process.env.ETCD_SECRET || 'invalid';
+const secret = process.env.ETCD_CACHE_SECRET || 'invalid';
 
 const etcdPut = async ({ key, value }) => {
   const hash = crypto

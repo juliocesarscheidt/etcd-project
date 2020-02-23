@@ -10,24 +10,56 @@ metadata:
 spec:
   containers:
     - name: etcd0
-      image: quay.io/coreos/etcd:latest
+      image: bitnami/etcd:3-debian-10
+      # image: quay.io/coreos/etcd:latest
 
-      command:
-      - /usr/local/bin/etcd
-      - --name
-      - etcd0
-      - --initial-advertise-peer-urls
-      - http://etcd0:2380
-      - --listen-peer-urls
-      - http://0.0.0.0:2380
-      - --listen-client-urls
-      - http://0.0.0.0:2379
-      - --advertise-client-urls
-      - http://etcd0:2379
-      - --initial-cluster
-      - etcd0=http://etcd0:2380,etcd1=http://etcd1:2380,etcd2=http://etcd2:2380
-      - --initial-cluster-state
-      - new
+      # command:
+      # - /usr/local/bin/etcd
+      # - --name
+      # - etcd0
+      # - --initial-advertise-peer-urls
+      # - http://etcd0:2380
+      # - --listen-peer-urls
+      # - http://0.0.0.0:2380
+      # - --listen-client-urls
+      # - http://0.0.0.0:2379
+      # - --advertise-client-urls
+      # - http://etcd0:2379
+      # - --initial-cluster
+      # - etcd0=http://etcd0:2380,etcd1=http://etcd1:2380,etcd2=http://etcd2:2380
+      # - --initial-cluster-state
+      # - new
+
+      env:
+        - name: ETCD_NAME
+          value: etcd0
+
+        - name: ETCD_INITIAL_ADVERTISE_PEER_URLS
+          value: http://etcd0:2380
+
+        - name: ETCD_LISTEN_PEER_URLS
+          value: http://0.0.0.0:2380
+
+        - name: ETCD_LISTEN_CLIENT_URLS
+          value: http://0.0.0.0:2379
+
+        - name: ETCD_ADVERTISE_CLIENT_URLS
+          value: http://etcd0:2379
+
+        - name: ETCD_INITIAL_CLUSTER
+          value: etcd0=http://etcd0:2380,etcd1=http://etcd1:2380,etcd2=http://etcd2:2380
+
+        - name: ETCD_INITIAL_CLUSTER_STATE
+          value: new
+
+        - name: ETCD_INITIAL_CLUSTER_TOKEN
+          value: etcd-cluster
+
+        - name: ALLOW_NONE_AUTHENTICATION
+          value: "yes"
+
+        - name: ETCD_DATA_DIR
+          value: /bitnami/etcd/data/
 
       ports:
         - containerPort: 2379
