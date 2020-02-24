@@ -2,6 +2,18 @@ const crypto = require('crypto');
 const { Etcd3 } = require('etcd3');
 const { jsonParser, jsonStringify, parseObjectValuesToArray } = require('../utils/json-utils');
 
+const makeEtcdKey = ({ key, etcdCacheSecret }) => {
+  const hash = crypto
+    .createHmac('sha256', etcdCacheSecret)
+    .update(JSON.stringify(key))
+    .digest('hex');
+
+  const etcdKey = `/${key}/${hash}`;
+  console.info('etcdKey =>', etcdKey);
+
+  return etcdKey;
+};
+
 class EtcdService {
   constructor(etcdOptions, etcdCacheSecret) {
     this.etcdCacheSecret = etcdCacheSecret;
@@ -9,13 +21,7 @@ class EtcdService {
   }
 
   async etcdPut({ key, value }) {
-    const hash = crypto
-      .createHmac('sha256', this.etcdCacheSecret)
-      .update(JSON.stringify(key))
-      .digest('hex');
-
-    const etcdKey = `/${key}/${hash}`;
-    console.info('etcdKey', etcdKey);
+    const etcdKey = makeEtcdKey({ key, etcdCacheSecret: this.etcdCacheSecret });
 
     const res = await this.etcdClient.put(etcdKey).value(jsonStringify(value));
     console.info('member_id', res.header.member_id);
@@ -24,13 +30,7 @@ class EtcdService {
   }
 
   async etcdGet({ key }) {
-    const hash = crypto
-      .createHmac('sha256', this.etcdCacheSecret)
-      .update(JSON.stringify(key))
-      .digest('hex');
-
-    const etcdKey = `/${key}/${hash}`;
-    console.info('etcdKey', etcdKey);
+    const etcdKey = makeEtcdKey({ key, etcdCacheSecret: this.etcdCacheSecret });
 
     const res = await this.etcdClient.get(etcdKey).string();
 
@@ -47,6 +47,13 @@ class EtcdService {
     const res = await this.etcdClient.getAll().prefix(prefix).strings();
 
     return parseObjectValuesToArray(res);
+  }
+
+  async etcdDelete({ key }) {
+    const etcdKey = makeEtcdKey({ key, etcdCacheSecret: this.etcdCacheSecret });
+    const res = await this.etcdClient.delete().key(etcdKey);
+
+    return res;
   }
 
   async etcdDeleteAll() {

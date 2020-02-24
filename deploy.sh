@@ -24,6 +24,7 @@ kubectl apply -f ./k8s/etcd-svc.yaml
 kubectl apply -f ./k8s/etcd-app-deployment.yaml
 kubectl apply -f ./k8s/etcd-app-cluster-ip-svc.yaml
 kubectl apply -f ./k8s/etcd-app-hpa.yaml
+# ingress
 kubectl apply -f ./k8s/ingress-service.yaml
 
 # kubectl exec -it etcd0 -- /bin/sh -c "export ETCDCTL_API=3 && etcdctl put foo bar && etcdctl get foo"

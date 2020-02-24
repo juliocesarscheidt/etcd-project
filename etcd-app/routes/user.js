@@ -12,13 +12,13 @@ module.exports = (app) => {
   router.get('/users/:name', async (req, res) => {
     const name = req.params.name && req.params.name.toString().trim();
     if (!name) {
-      return res.status(400).json({ status: 'ERROR', message: 'bad_request' });
+      return res.status(400).json({ status: 'ERROR', message: 'invalid_params' });
     }
 
     const user = await etcd.etcdGet({ key: name });
     if (user) {
-      console.info('returning from CACHE :: user', user);
-      return res.status(202).json({ status: 'OK', data: { id: user.id, name: user.name } });
+      console.info('serving from CACHE :: user', user);
+      return res.status(200).json({ status: 'OK', data: { id: user.id, name: user.name } });
     }
 
     const random = Math.round(Math.random() * (+100000 - +1000) + +1000);
@@ -26,13 +26,13 @@ module.exports = (app) => {
 
     await etcd.etcdPut({ key: name, value: userRegister });
 
-    return res.status(202).json({ status: 'OK', data: userRegister });
+    return res.status(200).json({ status: 'OK', data: userRegister });
   });
 
   router.get('/users', async (req, res) => {
     const users = await etcd.etcdGetAll();
 
-    return res.status(202).json({ status: 'OK', data: users });
+    return res.status(200).json({ status: 'OK', data: users });
   });
 
   app.use('/api/v1', router);

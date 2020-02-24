@@ -6,6 +6,8 @@ COPY ./package*.json /app/
 RUN npm install
 COPY . /app/
 
+RUN apk add curl
+
 EXPOSE 9000
 
 CMD ["npm", "start"]

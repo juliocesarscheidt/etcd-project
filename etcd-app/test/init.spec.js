@@ -28,7 +28,7 @@ beforeEach(() => {
   EtcdService.mockClear();
 });
 
-it('should check etcd service has not been called first', async () => {
+it('should check etcd service hasn\'t been called in the begin', async () => {
   expect(EtcdService).not.toHaveBeenCalled();
 
   const etcd = new EtcdService();
@@ -40,7 +40,7 @@ it('should check etcd service has been called', async () => {
   expect(EtcdService).toHaveBeenCalledTimes(1);
 });
 
-it('should test the etcd put', async () => {
+it('should test the etcd put method', async () => {
   const etcd = new EtcdService();
 
   const data = { key: 'USER_01', value: { id: 1, name: 'USER_01' } };
@@ -52,7 +52,7 @@ it('should test the etcd put', async () => {
   expect(mockEtcdPut.mock.calls[0][0]).toEqual(data);
 });
 
-it('should test the etcd get', async () => {
+it('should test the etcd get method', async () => {
   const etcd = new EtcdService();
 
   const data = { key: 'USER_01' };
