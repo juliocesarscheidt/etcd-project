@@ -7,8 +7,7 @@
     "start": "node index.js",
     "dev": "pm2 start index.js -i 1 --watch && pm2 logs",
     "lint": "eslint .",
-    "test": "jest",
-    "test:watch": "jest -- --watchAll"
+    "test": "jest --ci --coverage"
   },
   "keywords": [],
   "author": "julio-cesar",

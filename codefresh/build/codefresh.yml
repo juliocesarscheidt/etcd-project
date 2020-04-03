@@ -1,0 +1,56 @@
+version: '1.0'
+stages:
+- checkout
+- build
+# - test
+# - push
+
+steps:
+  main_clone:
+    type: "git-clone"
+    title: "Cloning repository"
+    description: "Cloning app repository"
+    repo: "${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}"
+    revision: "${{CF_REVISION}}"
+    stage: "checkout"
+    git: "github"
+    fail_fast: true
+
+  build:
+    title: "Building app"
+    type: "parallel"
+    stage: "build"
+    steps:
+      etcd_app:
+        title: "Etcd app"
+        type: "build"
+        image_name: "etcd-app"
+        tag: "${{CF_SHORT_REVISION}}"
+        working_directory: "${{main_clone}}/etcd-app/"
+        no_cache: false
+        no_cf_cache: false
+
+  # test:
+  #   title: "Test"
+  #   description: "Testing app"
+  #   stage: "test"
+  #   type: "parallel"
+  #   steps:
+  #     test_etcd_app:
+  #       title: "Etcd app"
+  #       image: ${{etcd_app}}
+  #       working_directory: "${{main_clone}}/etcd-app/"
+  #       commands:
+  #         - npm install
+  #         - npm run test
+  #       environment:
+  #         - NODE_ENV=development
+
+  # push:
+  #   stage: 'push'
+  #   type: push
+  #   title: "Pushing to Dockerhub"
+  #   candidate: ${{etcd_app}}
+  #   tag: "${{CF_SHORT_REVISION}}"
+  #   registry: dockerhub
+  #   image_name: juliocesarmidia/etcd-app

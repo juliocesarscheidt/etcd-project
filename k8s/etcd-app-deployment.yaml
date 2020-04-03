@@ -32,7 +32,7 @@ spec:
           image: juliocesarmidia/etcd-app:v1.0.0
 
           ports:
-            - containerPort: 9000
+            - containerPort: 8200
               name: etcd-app-port
 
           env:
@@ -46,7 +46,7 @@ spec:
                   key: ETCD_CACHE_SECRET
 
             - name: API_PORT
-              value: "9000"
+              value: "8200"
 
           resources:
             requests:
@@ -56,5 +56,21 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "300m"
+
+          livenessProbe:
+            httpGet:
+              path: /api/v1/healthcheck
+              port: 8200
+            initialDelaySeconds: 10
+            timeoutSeconds: 30
+
+          readinessProbe:
+            httpGet:
+              path: /api/v1/healthcheck
+              port: 8200
+            initialDelaySeconds: 10
+            timeoutSeconds: 30
+
+          imagePullPolicy: IfNotPresent
 
       restartPolicy: Always

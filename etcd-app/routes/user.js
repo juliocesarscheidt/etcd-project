@@ -11,6 +11,8 @@ const etcd = new EtcdService(etcdOptions, etcdCacheSecret);
 module.exports = (app) => {
   router.get('/users/:name', async (req, res) => {
     const name = req.params.name && req.params.name.toString().trim();
+    console.info(`ROUTE /api/v1/users/${name}`);
+
     if (!name) {
       return res.status(400).json({ status: 'ERROR', message: 'invalid_params' });
     }

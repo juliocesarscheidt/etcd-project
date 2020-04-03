@@ -1,28 +1,28 @@
 version: '3'
 
 services:
-  app:
-    container_name: app
+  etcd-app:
+    container_name: etcd-app
     build:
       context: ./etcd-app/
       dockerfile: Dockerfile
     ports:
-      - 9000:9000
-    restart: always
+      - 8200:8200
+    restart: "on-failure"
     depends_on:
       - etcd
     environment:
       ETCD_HOST: ${ETCD_HOST:-http://etcd:2379}
       ETCD_CACHE_SECRET: ${ETCD_CACHE_SECRET:-invalid}
-      API_PORT: ${API_PORT:-9000}
+      API_PORT: ${API_PORT:-8200}
     networks:
-      - app-tier
+      - etcd-app
     volumes:
       - ./etcd-app/:/app/
       - /app/node_modules/
     command: "sh -c 'npm install && npm run dev'"
     healthcheck:
-      test: ["CMD", "curl", "-s", "http://app:9000/api/v1/healthcheck"]
+      test: ["CMD", "curl", "-s", "http://app:8200/api/v1/healthcheck"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -31,17 +31,17 @@ services:
     container_name: etcd
     image: bitnami/etcd:3-debian-10
     ports:
-      - 2379:2379
-      - 2380:2380
-    restart: always
+      - 23790:2379
+      - 23800:2380
+    restart: "on-failure"
     environment:
       ETCD_CONFIG_FILE: ${ETCD_CONFIG_FILE:-/usr/bin/etcd.conf.yaml}
       ALLOW_NONE_AUTHENTICATION: ${ALLOW_NONE_AUTHENTICATION:-yes}
     networks:
-      - app-tier
+      - etcd-app
     volumes:
       - ./etcd.conf.yaml:/usr/bin/etcd.conf.yaml
 
 networks:
-  app-tier:
+  etcd-app:
     driver: bridge

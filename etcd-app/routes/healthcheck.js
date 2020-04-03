@@ -10,6 +10,8 @@ const etcd = new EtcdService(etcdOptions, etcdCacheSecret);
 
 module.exports = (app) => {
   router.get('/healthcheck', async (req, res) => {
+    console.info('ROUTE /api/v1/healthcheck');
+
     await etcd.etcdPut({ key: 'ETCD_HEALTHCHECK', value: 'HEALTHCHECK_OK' });
 
     const data = await etcd.etcdGet({ key: 'ETCD_HEALTHCHECK' });

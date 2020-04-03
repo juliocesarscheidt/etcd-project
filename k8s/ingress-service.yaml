@@ -18,7 +18,7 @@ metadata:
 #           - path: /
 #             backend:
 #               serviceName: etcd-app-svc
-#               servicePort: 9000
+#               servicePort: 80
 
 spec:
   rules:
@@ -27,4 +27,4 @@ spec:
           - path: /
             backend:
               serviceName: etcd-app-svc
-              servicePort: 9000
+              servicePort: 80
