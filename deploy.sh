@@ -4,6 +4,18 @@ set -e
 
 # (kubectl delete -f ./k8s/ 1> /dev/null 2>&1 &)
 
+# get current context and set the namespace
+# export CONTEXT=$(kubectl config view | awk '/current-context/ {print$ 2}')
+# export NAMESPACE=development
+
+# kubectl config set-context ${CONTEXT} --namespace=${NAMESPACE}
+
+# namespace
+kubectl apply -f ./k8s/namespace.yaml
+
+# quota
+kubectl apply -f ./k8s/resourcequota.yaml
+
 # secrets
 kubectl apply -f ./k8s/secrets.yaml
 

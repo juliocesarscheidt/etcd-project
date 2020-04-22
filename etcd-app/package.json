@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "pm2 start index.js -i 1 --watch && pm2 logs",
+    "dev": "pm2-dev index.js",
+    "prod": "pm2 start index.js -i 1 --watch && pm2 logs",
     "lint": "eslint .",
     "test": "jest --ci --coverage"
   },

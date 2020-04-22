@@ -2,7 +2,7 @@ apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
   name: etcd-hpa
-  namespace: default
+  namespace: development
 
 spec:
   scaleTargetRef:

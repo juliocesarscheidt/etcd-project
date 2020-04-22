@@ -17,49 +17,111 @@ const makeEtcdKey = ({ key, etcdCacheSecret }) => {
 class EtcdService {
   constructor(etcdOptions, etcdCacheSecret) {
     this.etcdCacheSecret = etcdCacheSecret;
-    this.etcdClient = new Etcd3(etcdOptions);
+    this.etcdOptions = etcdOptions;
+
+    this.init();
+  }
+
+  async init() {
+    // initialize etcd client
+    try {
+      this.etcdClient = await this.getETCDConnection();
+    } catch (_) {
+      console.error('[ERROR] Could not connect to ETCD');
+    }
+  }
+
+  async getETCDConnection() {
+    let etcdClient = null;
+
+    return new Promise((resolve, reject) => {
+      if (this.etcdClient !== undefined && this.etcdClient !== null) {
+        resolve(this.etcdClient);
+      }
+
+      try {
+        etcdClient = new Etcd3(this.etcdOptions);
+        resolve(etcdClient);
+      } catch (exception) {
+        reject(exception);
+      }
+    });
   }
 
   async etcdPut({ key, value }) {
-    const etcdKey = makeEtcdKey({ key, etcdCacheSecret: this.etcdCacheSecret });
+    if (this.etcdClient === undefined || this.etcdClient === null) {
+      this.etcdClient = await this.getETCDConnection();
+    }
 
-    const res = await this.etcdClient.put(etcdKey).value(jsonStringify(value));
-    console.info('member_id', res.header.member_id);
+    try {
+      const etcdKey = makeEtcdKey({ key, etcdCacheSecret: this.etcdCacheSecret });
 
-    return res;
+      const res = await this.etcdClient.put(etcdKey).value(jsonStringify(value));
+      console.info('member_id', res.header.member_id);
+
+      return res;
+    } catch (exception) {
+      console.error('[ERROR] Error when trying to call ETCD', exception);
+      throw exception;
+    }
   }
 
   async etcdGet({ key }) {
-    const etcdKey = makeEtcdKey({ key, etcdCacheSecret: this.etcdCacheSecret });
+    try {
+      const etcdKey = makeEtcdKey({ key, etcdCacheSecret: this.etcdCacheSecret });
 
-    const res = await this.etcdClient.get(etcdKey).string();
+      const res = await this.etcdClient.get(etcdKey).string();
 
-    return jsonParser(res);
+      return jsonParser(res);
+    } catch (exception) {
+      console.error('[ERROR] Error when trying to call ETCD', exception);
+      throw exception;
+    }
   }
 
   async etcdGetAll() {
-    const res = await this.etcdClient.getAll().strings();
+    try {
+      const res = await this.etcdClient.getAll().strings();
 
-    return parseObjectValuesToArray(res);
+      return parseObjectValuesToArray(res);
+    } catch (exception) {
+      console.error('[ERROR] Error when trying to call ETCD', exception);
+      throw exception;
+    }
   }
 
   async etcdGetAllByPrefix({ prefix }) {
-    const res = await this.etcdClient.getAll().prefix(prefix).strings();
+    try {
+      const res = await this.etcdClient.getAll().prefix(prefix).strings();
 
-    return parseObjectValuesToArray(res);
+      return parseObjectValuesToArray(res);
+    } catch (exception) {
+      console.error('[ERROR] Error when trying to call ETCD', exception);
+      throw exception;
+    }
   }
 
   async etcdDelete({ key }) {
-    const etcdKey = makeEtcdKey({ key, etcdCacheSecret: this.etcdCacheSecret });
-    const res = await this.etcdClient.delete().key(etcdKey);
+    try {
+      const etcdKey = makeEtcdKey({ key, etcdCacheSecret: this.etcdCacheSecret });
+      const res = await this.etcdClient.delete().key(etcdKey);
 
-    return res;
+      return res;
+    } catch (exception) {
+      console.error('[ERROR] Error when trying to call ETCD', exception);
+      throw exception;
+    }
   }
 
   async etcdDeleteAll() {
-    const res = await this.etcdClient.delete().all();
+    try {
+      const res = await this.etcdClient.delete().all();
 
-    return res;
+      return res;
+    } catch (exception) {
+      console.error('[ERROR] Error when trying to call ETCD', exception);
+      throw exception;
+    }
   }
 }
 

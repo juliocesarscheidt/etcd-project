@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: etcd-app-ingress
-  namespace: default
+  namespace: development
 
 #   annotations:
 #     external-dns.alpha.kubernetes.io/hostname: 127.0.0.1.nip.io

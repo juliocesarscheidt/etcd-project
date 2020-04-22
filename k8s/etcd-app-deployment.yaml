@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: etcd-deployment
-  namespace: default
+  namespace: development
   labels:
     app: etcd-app
 
