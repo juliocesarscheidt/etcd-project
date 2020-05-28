@@ -43,11 +43,16 @@ spec:
         - name: ETCD_DATA_DIR
           value: /bitnami/etcd/data/
 
+        - name: ETCD_HEARTBEAT_INTERVAL
+          value: 50
+
+        - name: ETCD_ELECTION_TIMEOUT
+          value: 200
+
       ports:
         - containerPort: 2379
           name: client-port
           protocol: TCP
-
         - containerPort: 2380
           name: server-port
           protocol: TCP
@@ -56,7 +61,6 @@ spec:
         requests:
           memory: "128Mi"
           cpu: "150m"
-
         limits:
           memory: "256Mi"
           cpu: "300m"
