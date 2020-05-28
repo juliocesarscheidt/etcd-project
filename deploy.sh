@@ -24,7 +24,7 @@ kubectl apply -f ./k8s/secrets.yaml
 
 # nginx ingress controller
 # kubectl apply -f ./k8s/nginx-ingress-controller.yaml
-# kubectl get pod,deploy,svc -n ingress-nginx
+# kubectl get pod,deploy,svc,ep -n ingress-nginx
 
 # etcd app
 kubectl apply -f ./k8s/etcd-app-deployment.yaml

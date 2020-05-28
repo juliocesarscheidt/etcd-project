@@ -7,7 +7,7 @@ metadata:
     app: etcd-app
 
 spec:
-  # replicas: 1
+  replicas: 1
   revisionHistoryLimit: 5
 
   selector:
@@ -51,25 +51,34 @@ spec:
           resources:
             requests:
               memory: "128Mi"
-              cpu: "250m"
+              cpu: "200m"
             limits:
               memory: "256Mi"
-              cpu: "500m"
+              cpu: "400m"
 
           livenessProbe:
             httpGet:
               path: /api/v1/healthcheck
               port: 8200
-            initialDelaySeconds: 10
+            initialDelaySeconds: 30
             timeoutSeconds: 30
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
 
           readinessProbe:
             httpGet:
               path: /api/v1/healthcheck
               port: 8200
-            initialDelaySeconds: 10
+            initialDelaySeconds: 30
             timeoutSeconds: 30
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
 
           imagePullPolicy: IfNotPresent
 
       restartPolicy: Always
+
+# kubectl exec -it "$(kubectl get pod -n development | grep "etcd-deployment" | head -n 1 | cut -d' ' -f1)" -- /bin/sh -c "curl http://localhost:8200/api/v1/healthcheck"
+# kubectl logs -f "$(kubectl get pod -n development | grep "etcd-deployment" | head -n 1 | cut -d' ' -f1)"

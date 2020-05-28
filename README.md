@@ -33,7 +33,7 @@ kubectl apply -f ./k8s
 export DATA_DIR=data.etcd
 export CLUSTER_TOKEN=etcd-cluster
 export CLUSTER_STATE=new
-export MACHINE_NAME=etcd0
+export MACHINE_NAME=etcdserver
 export MACHINE_HOST=0.0.0.0
 
 export CLUSTER="${MACHINE_NAME}=http://${MACHINE_HOST}:2380"

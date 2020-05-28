@@ -1,5 +1,5 @@
 # Human-readable name for this member.
-name: 'etcd0'
+name: 'etcdserver'
 
 # Path to the data directory.
 data-dir: data.etcd
@@ -56,7 +56,7 @@ discovery-proxy:
 discovery-srv:
 
 # Initial cluster configuration for bootstrapping. ("name" must be equal cluster name)
-initial-cluster: 'etcd0=http://0.0.0.0:2380'
+initial-cluster: 'etcdserver=http://0.0.0.0:2380'
 
 # Initial cluster token for the etcd cluster during bootstrap.
 initial-cluster-token: 'etcd-cluster'
