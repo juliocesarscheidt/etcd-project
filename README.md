@@ -7,6 +7,12 @@
 
 ## Instructions
 
+### About ETCD
+
+- ETCD is an open source distributed key-value store that uses Raft Consensus Algorithm, written in Go.
+  [[GitHub](https://github.com/etcd-io/etcd)]
+  [[Docs](https://etcd.io/docs/v3.4.0/)]
+
 ### Running with Docker
 
 ```bash

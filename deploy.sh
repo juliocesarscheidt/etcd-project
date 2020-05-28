@@ -57,3 +57,6 @@ kubectl apply -f ./k8s/etcd-svc.yaml
 # | http://etcd1:2379 | ade526d28b1f92f7 |   3.4.3 |   74 kB |      true |      false |         2 |        238 |                238 |        |
 # | http://etcd2:2379 | d282ac2ce600c1ce |   3.4.3 |   74 kB |     false |      false |         2 |        238 |                238 |        |
 # +-------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
+
+# start etcd gateway
+# kubectl exec -it etcd0 -- /bin/sh -c "etcd gateway start --endpoints=http://etcd0:2379,http://etcd1:2379,http://etcd2:2379"
