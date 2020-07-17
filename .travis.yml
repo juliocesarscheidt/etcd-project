@@ -8,15 +8,13 @@ env:
   - SHA=$(git rev-parse --short HEAD)
 
 before_install:
-  - docker image build --tag juliocesarmidia/etcd-app:$SHA ./etcd-app
+  - docker image build --tag juliocesarmidia/etcd-app:$SHA --tag juliocesarmidia/etcd-app:latest ./etcd-app
 
 script:
-  - docker container run --rm --entrypoint "" juliocesarmidia/etcd-app:$SHA npm run test
+  - docker container run --rm --name etcd-app --entrypoint "" juliocesarmidia/etcd-app:$SHA npm run test
 
 after_success:
-  - docker image build --tag juliocesarmidia/etcd-app:$SHA --tag juliocesarmidia/etcd-app:v1.0.0 ./etcd-app
-
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
 
-  - docker image push juliocesarmidia/etcd-app:v1.0.0
+  - docker image push juliocesarmidia/etcd-app:latest
   - docker image push juliocesarmidia/etcd-app:$SHA

@@ -2,8 +2,6 @@
 
 set -e
 
-# (kubectl delete -f ./k8s/ 1> /dev/null 2>&1 &)
-
 # get current context and set the namespace
 # export CONTEXT=$(kubectl config view | awk '/current-context/ {print$ 2}')
 # export NAMESPACE=development
@@ -13,25 +11,16 @@ set -e
 CURRENT_NAMESPACE=$(kubectl config get-contexts | grep "*" | tr -s '\t' ' ' | cut -d " " -f 5)
 echo "${CURRENT_NAMESPACE}"
 
-# namespace
-kubectl apply -f ./k8s/namespace.yaml
-
-# quota
-# kubectl apply -f ./k8s/resourcequota.yaml
-
-# secrets
-kubectl apply -f ./k8s/secrets.yaml
-
 # nginx ingress controller
 # kubectl apply -f ./k8s/nginx-ingress-controller.yaml
 # kubectl get pod,deploy,svc,ep -n ingress-nginx
 
 # etcd app
-kubectl apply -f ./k8s/etcd-app-deployment.yaml
-kubectl apply -f ./k8s/etcd-app-cluster-ip-svc.yaml
-# kubectl apply -f ./k8s/etcd-app-hpa.yaml
+kubectl apply -f ./k8s/etcd-app.yaml
 # ingress svc
 kubectl apply -f ./k8s/ingress-service.yaml
+
+# kubectl get pod,deploy,svc,ingress -n development
 
 # etcd cluster
 NUM_PODS=3

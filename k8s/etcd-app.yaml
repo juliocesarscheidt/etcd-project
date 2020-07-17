@@ -1,3 +1,24 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: development
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: env-secrets
+  namespace: development
+  labels:
+    app: etcd-app
+
+type: Opaque
+data:
+  ETCD_CACHE_SECRET: TGtoYWZoa28yNUxrODJhZmdibnNOU0pPNHk4NzJHYmpza2psYTk4MjRoYWhzZmFz
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -7,7 +28,8 @@ metadata:
     app: etcd-app
 
 spec:
-  replicas: 1
+  # replicas: 1
+
   revisionHistoryLimit: 5
 
   selector:
@@ -82,3 +104,42 @@ spec:
 
 # kubectl exec -it "$(kubectl get pod -n development | grep "etcd-deployment" | head -n 1 | cut -d' ' -f1)" -- /bin/sh -c "curl http://localhost:8200/api/v1/healthcheck"
 # kubectl logs -f "$(kubectl get pod -n development | grep "etcd-deployment" | head -n 1 | cut -d' ' -f1)"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: etcd-app-svc
+  namespace: development
+  labels:
+    app: etcd-app
+
+spec:
+  type: ClusterIP
+
+  selector:
+    app: etcd-app
+
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: etcd-app-port
+
+---
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: etcd-hpa
+  namespace: development
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: etcd-deployment
+
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
