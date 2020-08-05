@@ -1,9 +1,10 @@
 # ETCD Project
 
-[![Build Status](https://badgen.net/travis/julio-cesar-development/etcd-project?icon=travis)](https://travis-ci.com/julio-cesar-development/etcd-project)
+[![Build Status](https://travis-ci.org/julio-cesar-development/etcd-project.svg)](https://travis-ci.org/julio-cesar-development/etcd-project)
 [![GitHub Status](https://badgen.net/github/status/julio-cesar-development/etcd-project)](https://github.com/julio-cesar-development/etcd-project)
+![License](https://badgen.net/badge/license/MIT/blue)
 
-> This is a simple API project made with Node, Express, using key-value store with Etcd, running in containers with Docker and deploy with K8S
+> This is a simple API project made with Node, Express, using key-value store with ETCD, running in containers with Docker and deploy with K8S
 
 ## Instructions
 
@@ -22,9 +23,8 @@ docker-compose up -d
 ### Running with K8S
 
 ```bash
-./deploy.sh
-# or
-kubectl apply -f ./k8s
+chmod +x deploy.sh && \
+    bash deploy.sh
 ```
 
 ### Running Etcd appart

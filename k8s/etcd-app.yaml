@@ -1,17 +1,8 @@
 apiVersion: v1
-kind: Namespace
-metadata:
-  name: development
-
----
-
-apiVersion: v1
 kind: Secret
 metadata:
-  name: env-secrets
-  namespace: development
-  labels:
-    app: etcd-app
+  name: etcd-app-secret
+  namespace: etcd-project
 
 type: Opaque
 data:
@@ -23,12 +14,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: etcd-deployment
-  namespace: development
+  namespace: etcd-project
   labels:
     app: etcd-app
 
 spec:
-  # replicas: 1
+  replicas: 3
 
   revisionHistoryLimit: 5
 
@@ -59,12 +50,12 @@ spec:
 
           env:
             - name: ETCD_HOST
-              value: "http://etcd-svc:2379"
+              value: "http://etcd:2379"
 
             - name: ETCD_CACHE_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: env-secrets
+                  name: etcd-app-secret
                   key: ETCD_CACHE_SECRET
 
             - name: API_PORT
@@ -102,16 +93,13 @@ spec:
 
       restartPolicy: Always
 
-# kubectl exec -it "$(kubectl get pod -n development | grep "etcd-deployment" | head -n 1 | cut -d' ' -f1)" -- /bin/sh -c "curl http://localhost:8200/api/v1/healthcheck"
-# kubectl logs -f "$(kubectl get pod -n development | grep "etcd-deployment" | head -n 1 | cut -d' ' -f1)"
-
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: etcd-app-svc
-  namespace: development
+  name: etcd-app
+  namespace: etcd-project
   labels:
     app: etcd-app
 
@@ -128,18 +116,23 @@ spec:
 
 ---
 
-apiVersion: autoscaling/v1
-kind: HorizontalPodAutoscaler
+apiVersion: extensions/v1beta1
+kind: Ingress
+
 metadata:
-  name: etcd-hpa
-  namespace: development
-
+  name: etcd-app-ingress
+  namespace: etcd-project
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/rewrite-target: /
+    traefik.ingress.kubernetes.io/load-balancer-method: "wrr"
+    # drr Deficit Round Robin
+    # wrr Weighted round robin
 spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: etcd-deployment
-
-  minReplicas: 1
-  maxReplicas: 3
-  targetCPUUtilizationPercentage: 80
+  rules:
+    - http:
+        paths:
+          - path: /
+            backend:
+              serviceName: etcd-app
+              servicePort: 80
