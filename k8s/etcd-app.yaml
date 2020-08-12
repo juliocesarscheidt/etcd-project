@@ -15,23 +15,13 @@ kind: Deployment
 metadata:
   name: etcd-deployment
   namespace: etcd-project
-  labels:
-    app: etcd-app
 
 spec:
   replicas: 3
 
-  revisionHistoryLimit: 5
-
   selector:
     matchLabels:
       app: etcd-app
-
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 25%
-      maxSurge: 3
 
   template:
     metadata:
@@ -43,24 +33,24 @@ spec:
       containers:
         - name: app
           image: juliocesarmidia/etcd-app:v1.0.0
-
+          imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8200
-              name: etcd-app-port
-
+          - containerPort: 8200
+            name: etcd-app-port
           env:
-            - name: ETCD_HOST
-              value: "http://etcd:2379"
+          # - name: ETCD_HOST
+          #   value: "http://etcd:2379"
+          - name: ETCD_HOST
+            value: "http://etcd-proxy:2379"
 
-            - name: ETCD_CACHE_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: etcd-app-secret
-                  key: ETCD_CACHE_SECRET
+          - name: ETCD_CACHE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: etcd-app-secret
+                key: ETCD_CACHE_SECRET
 
-            - name: API_PORT
-              value: "8200"
-
+          - name: API_PORT
+            value: "8200"
           resources:
             requests:
               memory: "128Mi"
@@ -68,7 +58,6 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "400m"
-
           livenessProbe:
             httpGet:
               path: /api/v1/healthcheck
@@ -78,19 +67,15 @@ spec:
             periodSeconds: 30
             successThreshold: 1
             failureThreshold: 5
-
-          readinessProbe:
-            httpGet:
-              path: /api/v1/healthcheck
-              port: 8200
-            initialDelaySeconds: 30
-            timeoutSeconds: 30
-            periodSeconds: 30
-            successThreshold: 1
-            failureThreshold: 5
-
-          imagePullPolicy: IfNotPresent
-
+          # readinessProbe:
+          #   httpGet:
+          #     path: /api/v1/healthcheck
+          #     port: 8200
+          #   initialDelaySeconds: 30
+          #   timeoutSeconds: 30
+          #   periodSeconds: 30
+          #   successThreshold: 1
+          #   failureThreshold: 5
       restartPolicy: Always
 
 ---
@@ -100,19 +85,15 @@ kind: Service
 metadata:
   name: etcd-app
   namespace: etcd-project
-  labels:
-    app: etcd-app
 
 spec:
   type: ClusterIP
-
   selector:
     app: etcd-app
-
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: etcd-app-port
+  - protocol: TCP
+    port: 80
+    targetPort: etcd-app-port
 
 ---
 
@@ -126,8 +107,6 @@ metadata:
     kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/rewrite-target: /
     traefik.ingress.kubernetes.io/load-balancer-method: "wrr"
-    # drr Deficit Round Robin
-    # wrr Weighted round robin
 spec:
   rules:
     - http:

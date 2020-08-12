@@ -23,6 +23,9 @@ docker-compose up -d
 ### Running with K8S
 
 ```bash
+# Traefik controller needs to be running first
+kubectl apply -f ./k8s/traefik-ingress-controller.yaml
+
 chmod +x deploy.sh && \
     bash deploy.sh
 ```
