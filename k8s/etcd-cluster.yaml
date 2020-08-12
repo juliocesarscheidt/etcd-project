@@ -30,29 +30,23 @@ spec:
   containers:
     - name: etcd0
       image: bitnami/etcd:3-debian-10
-
       envFrom:
-        - configMapRef:
-            name: etcd-cluster-configmap
-
+      - configMapRef:
+          name: etcd-cluster-configmap
       env:
-        - name: ETCD_NAME
-          value: etcd0
-
-        - name: ETCD_INITIAL_ADVERTISE_PEER_URLS
-          value: http://etcd0:2380
-
-        - name: ETCD_ADVERTISE_CLIENT_URLS
-          value: http://etcd0:2379
-
+      - name: ETCD_NAME
+        value: etcd0
+      - name: ETCD_INITIAL_ADVERTISE_PEER_URLS
+        value: http://etcd0:2380
+      - name: ETCD_ADVERTISE_CLIENT_URLS
+        value: http://etcd0:2379
       ports:
-        - containerPort: 2379
-          name: client-port
-          protocol: TCP
-        - containerPort: 2380
-          name: server-port
-          protocol: TCP
-
+      - containerPort: 2379
+        name: client-port
+        protocol: TCP
+      - containerPort: 2380
+        name: server-port
+        protocol: TCP
       resources:
         requests:
           memory: "64Mi"
@@ -71,16 +65,13 @@ metadata:
 
 spec:
   type: ClusterIP
-
   selector:
     etcd_pod: etcd0
-
   ports:
   - name: client
     port: 2379
     protocol: TCP
     targetPort: client-port
-
   - name: server
     port: 2380
     protocol: TCP
@@ -101,29 +92,23 @@ spec:
   containers:
     - name: etcd1
       image: bitnami/etcd:3-debian-10
-
       envFrom:
-        - configMapRef:
-            name: etcd-cluster-configmap
-
+      - configMapRef:
+          name: etcd-cluster-configmap
       env:
-        - name: ETCD_NAME
-          value: etcd1
-
-        - name: ETCD_INITIAL_ADVERTISE_PEER_URLS
-          value: http://etcd1:2380
-
-        - name: ETCD_ADVERTISE_CLIENT_URLS
-          value: http://etcd1:2379
-
+      - name: ETCD_NAME
+        value: etcd1
+      - name: ETCD_INITIAL_ADVERTISE_PEER_URLS
+        value: http://etcd1:2380
+      - name: ETCD_ADVERTISE_CLIENT_URLS
+        value: http://etcd1:2379
       ports:
-        - containerPort: 2379
-          name: client-port
-          protocol: TCP
-        - containerPort: 2380
-          name: server-port
-          protocol: TCP
-
+      - containerPort: 2379
+        name: client-port
+        protocol: TCP
+      - containerPort: 2380
+        name: server-port
+        protocol: TCP
       resources:
         requests:
           memory: "64Mi"
@@ -142,16 +127,13 @@ metadata:
 
 spec:
   type: ClusterIP
-
   selector:
     etcd_pod: etcd1
-
   ports:
   - name: client
     port: 2379
     protocol: TCP
     targetPort: client-port
-
   - name: server
     port: 2380
     protocol: TCP
@@ -172,29 +154,23 @@ spec:
   containers:
     - name: etcd2
       image: bitnami/etcd:3-debian-10
-
       envFrom:
-        - configMapRef:
-            name: etcd-cluster-configmap
-
+      - configMapRef:
+          name: etcd-cluster-configmap
       env:
-        - name: ETCD_NAME
-          value: etcd2
-
-        - name: ETCD_INITIAL_ADVERTISE_PEER_URLS
-          value: http://etcd2:2380
-
-        - name: ETCD_ADVERTISE_CLIENT_URLS
-          value: http://etcd2:2379
-
+      - name: ETCD_NAME
+        value: etcd2
+      - name: ETCD_INITIAL_ADVERTISE_PEER_URLS
+        value: http://etcd2:2380
+      - name: ETCD_ADVERTISE_CLIENT_URLS
+        value: http://etcd2:2379
       ports:
-        - containerPort: 2379
-          name: client-port
-          protocol: TCP
-        - containerPort: 2380
-          name: server-port
-          protocol: TCP
-
+      - containerPort: 2379
+        name: client-port
+        protocol: TCP
+      - containerPort: 2380
+        name: server-port
+        protocol: TCP
       resources:
         requests:
           memory: "64Mi"
@@ -213,16 +189,13 @@ metadata:
 
 spec:
   type: ClusterIP
-
   selector:
     etcd_pod: etcd2
-
   ports:
   - name: client
     port: 2379
     protocol: TCP
     targetPort: client-port
-
   - name: server
     port: 2380
     protocol: TCP
@@ -230,19 +203,17 @@ spec:
 
 ---
 
-apiVersion: v1
-kind: Service
-metadata:
-  name: etcd
-  namespace: etcd-project
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: etcd
+#   namespace: etcd-project
 
-spec:
-  type: ClusterIP
-
-  selector:
-    app: etcd-cluster
-
-  ports:
-    - protocol: TCP
-      port: 2379
-      targetPort: client-port
+# spec:
+#   type: ClusterIP
+#   selector:
+#     app: etcd-cluster
+#   ports:
+#   - protocol: TCP
+#     port: 2379
+#     targetPort: client-port

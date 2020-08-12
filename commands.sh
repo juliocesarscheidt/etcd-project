@@ -19,7 +19,7 @@ kubectl logs -f deploy/etcd-app -n ${NAMESPACE}
 # echo ${CLUSTER_IPS}
 
 # see info about the cluster
-# kubectl exec -it etcd0 -- /bin/sh -c "export ETCDCTL_API=3 && etcdctl --endpoints="http://etcd0:2379,http://etcd1:2379,http://etcd2:2379" --write-out=table endpoint status"
+kubectl exec -it etcd0 -- /bin/sh -c "export ETCDCTL_API=3 && etcdctl --endpoints="etcd0:2379,etcd1:2379,etcd2:2379" --write-out=table endpoint status"
 # +-------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
 # |     ENDPOINT      |        ID        | VERSION | DB SIZE | IS LEADER | IS LEARNER | RAFT TERM | RAFT INDEX | RAFT APPLIED INDEX | ERRORS |
 # +-------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
@@ -29,4 +29,20 @@ kubectl logs -f deploy/etcd-app -n ${NAMESPACE}
 # +-------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
 
 # start etcd gateway
-# kubectl exec -it etcd0 -- /bin/sh -c "etcd gateway start --endpoints=http://etcd0:2379,http://etcd1:2379,http://etcd2:2379"
+# kubectl exec -it etcd0 -- /bin/sh -c "etcd gateway start --endpoints=etcd0:2379,etcd1:2379,etcd2:2379"
+
+# gRPC Proxy
+kubectl run -it -n default etcd --rm \
+    --env ALLOW_NONE_AUTHENTICATION="yes" \
+    --image=bitnami/etcd:3-debian-10 \
+    --restart=Never -- sh -c \
+    "etcd grpc-proxy start --endpoints=etcd0:2379,etcd1:2379,etcd2:2379 --listen-addr=0.0.0.0:2379"
+
+kubectl run -it -n default etcd --rm --env ALLOW_NONE_AUTHENTICATION="yes" --image=bitnami/etcd:3-debian-10 --restart=Never -- sh
+etcd grpc-proxy start --endpoints=etcd0:2379,etcd1:2379,etcd2:2379 --listen-addr=0.0.0.0:2379
+
+kubectl exec -it pod/etcd-proxy -n etcd-project -- sh
+kubectl exec -it pod/etcd0 -n etcd-project -- sh
+
+ETCDCTL_API=3 && etcdctl --endpoints="etcd0:2379,etcd1:2379,etcd2:2379" --write-out=table endpoint status
+ETCDCTL_API=3 && etcdctl --endpoints="etcd0:2379,etcd1:2379,etcd2:2379" --write-out=table member list
