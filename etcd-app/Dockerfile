@@ -1,17 +1,17 @@
-FROM node:10-alpine
+FROM node:14.15-alpine
 LABEL maintainer="Julio Cesar <julio@blackdevs.com.br>"
 
 WORKDIR /app
+
+RUN apk add curl
 
 COPY package*.json ./
 RUN npm install
 COPY . .
 
-RUN apk add curl
-
 EXPOSE 8200
 
-CMD ["npm", "start"]
+CMD ["node", "index.js"]
 
 # docker image build --tag etcd-app:v1.0.0 -f ./etcd-app/Dockerfile ./etcd-app
 # docker container run --name etcd-app -p 8200:8200 -v ${PWD}/etcd-app:/app etcd-app:v1.0.0

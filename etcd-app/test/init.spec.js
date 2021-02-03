@@ -1,7 +1,7 @@
-const { jsonParser, jsonStringify, parseObjectValuesToArray } = require('../utils/json-utils');
+const { jsonParser, jsonStringify, parseObjectValuesToArray } = require('../utils/jsonUtils');
 
-const EtcdService = require('../services/etcd-service.js');
-jest.mock('../services/etcd-service.js');
+const EtcdService = require('../services/etcdService.js');
+jest.mock('../services/etcdService.js');
 
 it('should parse the string correctly', () => {
   expect(jsonParser('{"name": "USER_01"}')).toStrictEqual({ name: 'USER_01' });

@@ -9,7 +9,9 @@ env:
 
 before_install:
   - |
-    docker image build --tag juliocesarmidia/etcd-app:$SHA --tag juliocesarmidia/etcd-app:latest ./etcd-app
+    docker image build \
+      --tag juliocesarmidia/etcd-app:$SHA \
+      --tag juliocesarmidia/etcd-app:latest ./etcd-app
 
 script:
   - |

@@ -1,17 +1,20 @@
 const express = require('express');
-const EtcdService = require('./services/etcd-service.js');
+const bodyParser = require('body-parser');
 
-const port = process.env.API_PORT || 8200;
+const router = express.Router();
 const app = express();
 
-const etcdOptions = { hosts: process.env.ETCD_HOST || 'http://127.0.0.1:2379', retry: true };
-const etcdCacheSecret = process.env.ETCD_CACHE_SECRET || 'invalid';
+const port = process.env.API_PORT || 8200;
+const host = process.env.API_HOST || '0.0.0.0';
 
-const etcd = new EtcdService(etcdOptions, etcdCacheSecret);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-require('./routes/user.js')(app, etcd);
-require('./routes/healthcheck.js')(app, etcd);
+app.use('/api/v1', router);
 
-app.listen(port, () => {
-  console.info(`Server listening on port ${port}`);
+require('./routes/userRoute.js')(router);
+require('./routes/healthcheckRoute.js')(router);
+
+app.listen(port, host, () => {
+  console.info(`Server listening on ${host}:${port}`);
 });

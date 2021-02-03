@@ -1,4 +1,4 @@
-const codes = {
+module.exports = {
   HTTP_OK: 200,
   HTTP_CREATED: 201,
   HTTP_ACCEPTED: 202,
@@ -25,5 +25,3 @@ const codes = {
   HTTP_SERVICE_UNAVAILABLE: 503,
   HTTP_GATEWAY_TIMEOUT: 504,
 };
-
-module.exports = codes;
