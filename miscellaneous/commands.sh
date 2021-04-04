@@ -1,5 +1,34 @@
 #!/bin/bash
 
+# export SHA=$(git rev-parse --short=7 HEAD)
+
+# docker image build --tag juliocesarmidia/etcd-app:v1.0.0 -f ./etcd-app/Dockerfile ./etcd-app
+# docker container run --name etcd-app -p 8200:8200 -v ${PWD}/etcd-app:/app juliocesarmidia/etcd-app:v1.0.0
+
+# run in interactive mode and replacing entrypoint to access sh
+# docker container run --rm -p 8200:8200 -v ${PWD}/etcd-app:/app -it --entrypoint "" juliocesarmidia/etcd-app:v1.0.0 /bin/sh
+
+# docker container run --rm -it --entrypoint "" juliocesarmidia/etcd-app:$SHA sh
+
+
+curl -X GET --silent \
+  -H 'Content-Type: application/json' \
+  --url "http://localhost:8200/api/v1/users"
+
+curl -X POST --silent \
+  -H 'Content-Type: application/json' \
+  --data-raw '{"name": "user1"}' \
+  --url "http://localhost:8200/api/v1/users"
+
+curl -X GET --silent \
+  -H 'Content-Type: application/json' \
+  --url "http://localhost:8200/api/v1/users/user1"
+
+curl -X DELETE --silent \
+  -H 'Content-Type: application/json' \
+  --url "http://localhost:8200/api/v1/users/user1"
+
+
 # get current context and set the namespace
 export CONTEXT=$(kubectl config current-context)
 export NAMESPACE=etcd-project
@@ -9,6 +38,7 @@ kubectl config set-context ${CONTEXT} --namespace=${NAMESPACE}
 kubectl get pod,deploy,svc,ingress -n ${NAMESPACE}
 
 kubectl logs -f deploy/etcd-app -n ${NAMESPACE}
+
 
 # kubectl exec -it "$(kubectl get pod -n ${NAMESPACE} | grep "etcd-deployment" | head -n 1 | cut -d' ' -f1)" -- /bin/sh -c "curl http://localhost:8200/api/v1/healthcheck"
 # kubectl logs -f "$(kubectl get pod -n ${NAMESPACE} | grep "etcd-deployment" | head -n 1 | cut -d' ' -f1)"
