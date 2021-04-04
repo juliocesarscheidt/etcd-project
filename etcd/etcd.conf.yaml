@@ -2,7 +2,7 @@
 name: 'etcdserver'
 
 # Path to the data directory.
-data-dir: data.etcd
+data-dir: /bitnami/etcd/data/
 
 # Path to the dedicated wal directory.
 wal-dir:
