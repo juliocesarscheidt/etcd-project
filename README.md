@@ -1,7 +1,7 @@
 # ETCD Project
 
-[![Build Status](https://travis-ci.org/julio-cesar-development/etcd-project.svg)](https://travis-ci.org/julio-cesar-development/etcd-project)
-[![GitHub Status](https://badgen.net/github/status/julio-cesar-development/etcd-project)](https://github.com/julio-cesar-development/etcd-project)
+[![Build Status](https://travis-ci.com/juliocesarscheidt/etcd-project.svg)](https://travis-ci.com/juliocesarscheidt/etcd-project)
+[![GitHub Status](https://badgen.net/github/status/juliocesarscheidt/etcd-project)](https://github.com/juliocesarscheidt/etcd-project)
 ![License](https://badgen.net/badge/license/MIT/blue)
 
 > This is a simple API project made with Node, Express, using key-value store with ETCD, running in containers with Docker and deploy with K8S
@@ -23,9 +23,6 @@ docker-compose up -d
 ### Running with K8S
 
 ```bash
-# Traefik controller needs to be running first
-kubectl apply -f ./k8s/traefik-ingress-controller.yaml
-
 chmod +x deploy.sh && \
     bash deploy.sh
 ```
@@ -52,6 +49,6 @@ nohup etcd --data-dir=${DATA_DIR} \
   --advertise-client-urls http://${MACHINE_HOST}:2379
 
 # or, run with a config file in background
-export ETCD_CONFIG_FILE=etcd.conf.yaml
+export ETCD_CONFIG_FILE=./etcd/etcd.conf.yaml
 nohup etcd --config-file ${ETCD_CONFIG_FILE} &
 ```
