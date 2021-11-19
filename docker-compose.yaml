@@ -5,12 +5,9 @@ services:
     container_name: etcd-app
     build:
       context: ./etcd-app/
-      dockerfile: Dockerfile
     ports:
       - 8200:8200
     restart: "on-failure"
-    depends_on:
-      - etcd
     environment:
       ETCD_HOST: ${ETCD_HOST:-http://etcd:2379}
       ETCD_CACHE_SECRET: ${ETCD_CACHE_SECRET:-TGtoYWZoa28yNUxrODJhZmdibnNOU0pPNHk4NzJHYmpza2psYTk4MjRoYWhzZmFz}

@@ -30,23 +30,33 @@ chmod +x deploy.sh && \
 ### Running Etcd appart
 
 ```bash
-export DATA_DIR=data.etcd
-export CLUSTER_TOKEN=etcd-cluster
-export CLUSTER_STATE=new
-export MACHINE_NAME=etcdserver
-export MACHINE_HOST=0.0.0.0
+export DATA_DIR="data.etcd"
+export CLUSTER_TOKEN="TOKEN"
+export CLUSTER_STATE="new"
+export CLUSTER_NAME="etcdserver"
+export LISTEN_ADDR="http://0.0.0.0:2380"
 
-export CLUSTER="${MACHINE_NAME}=http://${MACHINE_HOST}:2380"
+export CLUSTER="${CLUSTER_NAME}=${LISTEN_ADDR}"
 
 nohup etcd --data-dir=${DATA_DIR} \
-  --name ${MACHINE_NAME} \
+  --name ${CLUSTER_NAME} \
   --initial-cluster ${CLUSTER} \
   --initial-cluster-state ${CLUSTER_STATE} \
   --initial-cluster-token ${CLUSTER_TOKEN} \
-  --listen-peer-urls http://${MACHINE_HOST}:2380 \
-  --initial-advertise-peer-urls http://${MACHINE_HOST}:2380 \
-  --listen-client-urls http://${MACHINE_HOST}:2379 \
-  --advertise-client-urls http://${MACHINE_HOST}:2379
+  --listen-peer-urls ${LISTEN_ADDR} \
+  --initial-advertise-peer-urls ${LISTEN_ADDR} \
+  --listen-client-urls http://0.0.0.0:2379 \
+  --advertise-client-urls http://0.0.0.0:2379 \
+  --debug=false \
+  --auto-tls=false \
+  --peer-auto-tls=false \
+  --enable-pprof=false \
+  --metrics=basic \
+  --auth-token=simple \
+  --auto-compaction-retention=6 \
+  --enable-v2=true \
+  --force-new-cluster=false
+
 
 # or, run with a config file in background
 export ETCD_CONFIG_FILE=./etcd/etcd.conf.yaml
