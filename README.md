@@ -1,7 +1,5 @@
 # ETCD Project
 
-[![Build Status](https://travis-ci.com/juliocesarscheidt/etcd-project.svg)](https://travis-ci.com/juliocesarscheidt/etcd-project)
-[![GitHub Status](https://badgen.net/github/status/juliocesarscheidt/etcd-project)](https://github.com/juliocesarscheidt/etcd-project)
 ![License](https://badgen.net/badge/license/MIT/blue)
 
 > This is a simple API project made with Node, Express, using key-value store with ETCD, running in containers with Docker and deploy with K8S
